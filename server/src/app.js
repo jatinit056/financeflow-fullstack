@@ -19,8 +19,8 @@ import { AppError } from './utils/AppError.js';
 export function createApp({ rateLimitEnabled = config.RATE_LIMIT_ENABLED } = {}) {
   const app = express();
 
-  // Behind Render/Railway's load balancer: trust X-Forwarded-For for the real client IP.
-  if (config.TRUST_PROXY > 0) app.set('trust proxy', config.TRUST_PROXY);
+  // Behind Render/Railway's proxies: read the real client IP from X-Forwarded-For.
+  if (config.TRUST_PROXY) app.set('trust proxy', config.TRUST_PROXY);
 
   // Security headers (CSP, HSTS, no-sniff, frame protection...). Also removes X-Powered-By.
   app.use(helmet());

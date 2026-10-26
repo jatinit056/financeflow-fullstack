@@ -350,19 +350,19 @@ Content-Type: application/json
 
 **API** (`server/.env`, copy from [`server/.env.example`](server/.env.example))
 
-| Variable             | Required  | Example                                                     | Purpose                                                              |
-| -------------------- | :-------: | ----------------------------------------------------------- | -------------------------------------------------------------------- |
-| `DATABASE_URL`       |     ✓     | `postgresql://postgres:postgres@localhost:5432/financeflow` | App's database connection (Neon: the **pooled** URL)                 |
-| `DIRECT_URL`         |           | Neon direct URL                                             | Used only by Prisma migrations (Neon: the URL **without** `-pooler`) |
-| `JWT_SECRET`         |     ✓     | 64+ random characters                                       | Signs tokens. At least 32 characters or the server refuses to start  |
-| `JWT_EXPIRES_IN`     |           | `7d`                                                        | Token lifetime                                                       |
-| `CLIENT_URL`         | ✓ in prod | `https://financeflow.vercel.app`                            | Allowed CORS origin(s), comma-separated                              |
-| `PORT`               |           | `5000`                                                      | Render sets this automatically                                       |
-| `NODE_ENV`           |           | `production`                                                | `development`, `test` or `production`                                |
-| `BCRYPT_ROUNDS`      |           | `12`                                                        | Hashing cost                                                         |
-| `TRUST_PROXY`        |           | `1`                                                         | Proxies in front of the app (Render: 1), for correct client IPs      |
-| `RATE_LIMIT_ENABLED` |           | `true`                                                      | Turn rate limiting off for load tests                                |
-| `DEMO_MODE`          |           | `true`                                                      | Enables `POST /auth/demo`                                            |
+| Variable             | Required  | Example                                                     | Purpose                                                                                                                          |
+| -------------------- | :-------: | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`       |     ✓     | `postgresql://postgres:postgres@localhost:5432/financeflow` | App's database connection (Neon: the **pooled** URL)                                                                             |
+| `DIRECT_URL`         |           | Neon direct URL                                             | Used only by Prisma migrations (Neon: the URL **without** `-pooler`)                                                             |
+| `JWT_SECRET`         |     ✓     | 64+ random characters                                       | Signs tokens. At least 32 characters or the server refuses to start                                                              |
+| `JWT_EXPIRES_IN`     |           | `7d`                                                        | Token lifetime                                                                                                                   |
+| `CLIENT_URL`         | ✓ in prod | `https://financeflow.vercel.app`                            | Allowed CORS origin(s), comma-separated                                                                                          |
+| `PORT`               |           | `5000`                                                      | Render sets this automatically                                                                                                   |
+| `NODE_ENV`           |           | `production`                                                | `development`, `test` or `production`                                                                                            |
+| `BCRYPT_ROUNDS`      |           | `12`                                                        | Hashing cost                                                                                                                     |
+| `TRUST_PROXY`        |           | `true`                                                      | Real client IP behind the host's proxy, for rate limiting. Render: `true` (its proxy puts the client IP first). Locally: `false` |
+| `RATE_LIMIT_ENABLED` |           | `true`                                                      | Turn rate limiting off for load tests                                                                                            |
+| `DEMO_MODE`          |           | `true`                                                      | Enables `POST /auth/demo`                                                                                                        |
 
 Generate a secret with `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
 
@@ -567,7 +567,7 @@ six months of sample data. Each demo account is isolated and deleted automatical
 | Every query is scoped by `userId`; other users' records return 404, not 403               | services                             |
 | Zod validation on params, query and body; unknown fields are dropped (no mass assignment) | `middleware/validate.js`             |
 | CORS allow-list, Helmet security headers, 10 kb body limit                                | `app.js`                             |
-| Rate limits: failed logins (10 / 15 min), demo sessions, overall API                      | `middleware/rateLimit.js`            |
+| Rate limits per client IP: failed logins (10 / 15 min), demo sessions, overall API        | `middleware/rateLimit.js`            |
 | Same error and similar timing for unknown email and wrong password                        | `auth.service.js`                    |
 | Generic 500s; stack traces are only logged on the server                                  | `middleware/errorHandler.js`         |
 | Secrets only in environment variables; config validated at start-up                       | `config/env.js`, `.gitignore`        |

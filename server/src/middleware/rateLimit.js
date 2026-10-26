@@ -1,4 +1,5 @@
 import { rateLimit } from 'express-rate-limit';
+import { config } from '../config/env.js';
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
 const ONE_HOUR = 60 * 60 * 1000;
@@ -13,6 +14,9 @@ export function createRateLimiters({ enabled }) {
       standardHeaders: 'draft-8',
       legacyHeaders: false,
       skip: () => !enabled,
+      // TRUST_PROXY=true is deliberate on Render (its proxy sets the first X-Forwarded-For
+      // entry to the real client IP), so silence the library's generic warning about it.
+      validate: { trustProxy: config.TRUST_PROXY !== true },
       handler: (_req, res, _next, opts) => {
         res.status(opts.statusCode).json({
           error: { code: 'RATE_LIMITED', message: opts.message },

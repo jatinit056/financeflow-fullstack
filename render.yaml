@@ -31,7 +31,7 @@ services:
       - key: BCRYPT_ROUNDS
         value: '12'
       - key: TRUST_PROXY
-        value: '1'
+        value: 'true'
       - key: RATE_LIMIT_ENABLED
         value: 'true'
       - key: DEMO_MODE

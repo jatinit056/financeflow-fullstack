@@ -50,9 +50,17 @@ const envSchema = z.object({
 
   BCRYPT_ROUNDS: z.preprocess(emptyToUndefined, z.coerce.number().int().min(4).max(15).default(12)),
 
-  // Number of reverse proxies in front of the app (Render/Railway: 1). Needed so
-  // rate limiting sees the real client IP instead of the proxy's.
-  TRUST_PROXY: z.preprocess(emptyToUndefined, z.coerce.number().int().min(0).default(0)),
+  // How to find the real client IP behind the host's proxies (used by rate limiting):
+  //   false = no proxy (local), a number = trust that many hops,
+  //   true  = use the left-most X-Forwarded-For entry (Render puts the real client IP first).
+  TRUST_PROXY: z.preprocess(
+    emptyToUndefined,
+    z
+      .string()
+      .regex(/^(true|false|\d+)$/, { error: 'TRUST_PROXY must be true, false or a number' })
+      .transform((value) => (value === 'true' ? true : value === 'false' ? false : Number(value)))
+      .default(false),
+  ),
 
   RATE_LIMIT_ENABLED: envBoolean(true),
 
