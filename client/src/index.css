@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+/* Anek Latin by Ek Type (Mumbai) — variable weight and width. */
+@import '@fontsource-variable/anek-latin/wdth.css';
+
+/*
+ * Design tokens
+ * Paper and ledger green: the palette of a bank passbook. Data colours come from a
+ * colour-blind-safe categorical palette (income = blue, expenses = orange everywhere).
+ */
+@theme {
+  --font-sans:
+    'Anek Latin Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-paper: #f4f6f2;
+  --color-surface: #ffffff;
+  --color-ink: #18231f;
+  --color-ink-2: #56625d;
+  --color-ink-3: #66706b;
+  --color-rule: #e2e7e2;
+  --color-rule-strong: #cdd5ce;
+
+  --color-brand-50: #ecf6f2;
+  --color-brand-100: #d3ebe2;
+  --color-brand-200: #a8d6c5;
+  --color-brand-300: #74bba2;
+  --color-brand-500: #1a8a70;
+  --color-brand-600: #0b6b57;
+  --color-brand-700: #085444;
+  --color-brand-800: #073f34;
+  --color-brand-900: #052b24;
+
+  /* Data series */
+  --color-income: #2a78d6;
+  --color-expense: #eb6834;
+  --color-balance: #1baf7a;
+
+  /* Status — always paired with an icon and a label */
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-critical: #d03b3b;
+  --color-positive: #006300;
+  --color-negative: #b42318;
+
+  --radius-panel: 14px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Visible keyboard focus everywhere, never on mouse click. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+
+  /* Native <dialog> modals */
+  dialog::backdrop {
+    background: rgb(5 43 36 / 0.45);
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Money figures: semi-condensed, so long Indian-grouped amounts stay compact. */
+@utility figure {
+  font-stretch: 88%;
+  letter-spacing: -0.01em;
+}
