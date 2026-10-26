@@ -1,0 +1,38 @@
+# Render Blueprint — deploys the API from the server/ folder.
+# Render dashboard: New + > Blueprint > pick this repository.
+# You will be asked for DATABASE_URL, DIRECT_URL and CLIENT_URL (see README > Deployment).
+services:
+  - type: web
+    name: financeflow-api
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: server
+    # Installs dev tools too (Prisma CLI), generates the client and applies migrations.
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: BCRYPT_ROUNDS
+        value: '12'
+      - key: TRUST_PROXY
+        value: '1'
+      - key: RATE_LIMIT_ENABLED
+        value: 'true'
+      - key: DEMO_MODE
+        value: 'true'
