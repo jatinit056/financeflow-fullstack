@@ -1,0 +1,79 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "FinanceFlow: First-time setup",
+      "detail": "Install dependencies, start PostgreSQL in Docker, create the tables and load demo data",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "FinanceFlow: Install dependencies",
+        "FinanceFlow: Start database (Docker)",
+        "FinanceFlow: Create tables",
+        "FinanceFlow: Load demo data"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Start app (API + web)",
+      "detail": "API on http://localhost:5000, web app on http://localhost:5173",
+      "type": "shell",
+      "command": "npm run dev",
+      "presentation": { "panel": "dedicated", "reveal": "always", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Open in browser",
+      "detail": "Opens http://localhost:5173 in your default browser",
+      "type": "process",
+      "command": "cmd",
+      "args": ["/c", "start", "", "http://localhost:5173"],
+      "osx": { "command": "open", "args": ["http://localhost:5173"] },
+      "linux": { "command": "xdg-open", "args": ["http://localhost:5173"] },
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Run tests",
+      "detail": "API tests need the database running",
+      "type": "shell",
+      "command": "npm test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Install dependencies",
+      "type": "shell",
+      "command": "npm run install:all",
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Start database (Docker)",
+      "detail": "Needs Docker Desktop to be running",
+      "type": "shell",
+      "command": "docker compose up -d --wait",
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Create tables",
+      "type": "shell",
+      "command": "npm --prefix server run db:deploy",
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Load demo data",
+      "type": "shell",
+      "command": "npm --prefix server run db:seed",
+      "problemMatcher": []
+    },
+    {
+      "label": "FinanceFlow: Check tools",
+      "detail": "Shows the installed Node.js, npm, Git and Docker versions",
+      "type": "shell",
+      "command": "node --version; npm --version; git --version; docker --version",
+      "windows": {
+        "command": "node --version; npm --version; git --version; docker --version; docker compose version"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

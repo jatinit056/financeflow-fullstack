@@ -1,0 +1,9 @@
+# Keep LF line endings on every OS (Prettier and .editorconfig expect LF),
+# so a clone on Windows stays identical to Linux/macOS and CI.
+* text=auto eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

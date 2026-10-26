@@ -408,6 +408,17 @@ npm run dev
 
 Open **http://localhost:5173**. The API runs on **http://localhost:5000** (`/api/health` should return `ok`).
 
+**One-click setup in VS Code**
+
+The repo ships VS Code tasks, so you can do everything from menus. Open the folder in VS Code, then
+**Terminal → Run Task…** and pick:
+
+1. **FinanceFlow: First-time setup** — installs dependencies, starts PostgreSQL in Docker (Docker
+   Desktop must be running), creates the tables and loads the demo data. Create `server/.env` first
+   (step 3 above).
+2. **FinanceFlow: Start app (API + web)** — runs both servers.
+3. **FinanceFlow: Open in browser** — opens http://localhost:5173.
+
 **Running each part separately**
 
 ```bash
