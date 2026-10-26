@@ -1,0 +1,92 @@
+// FinanceFlow database schema
+// Docs: https://pris.ly/d/prisma-schema
+//
+// Conventions
+// - Models use camelCase fields in code and snake_case columns/tables in Postgres (@map / @@map).
+// - IDs are time-ordered UUID v7: unguessable like v4, but index-friendly.
+// - Money is DECIMAL(12, 2) — never floating point.
+// - Every user-owned table has a foreign key to users(id) with ON DELETE CASCADE.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+
+  @@map("transaction_type")
+}
+
+enum Category {
+  // Income
+  SALARY
+  FREELANCE
+  INVESTMENTS
+  // Expense
+  FOOD
+  TRANSPORT
+  SHOPPING
+  BILLS
+  RENT
+  HEALTH
+  EDUCATION
+  ENTERTAINMENT
+  // Both
+  OTHER
+
+  @@map("category")
+}
+
+model User {
+  id           String        @id @default(uuid(7)) @db.Uuid
+  name         String        @db.VarChar(80)
+  email        String        @unique @db.VarChar(255)
+  passwordHash String        @map("password_hash")
+  isDemo       Boolean       @default(false) @map("is_demo")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@index([isDemo, createdAt])
+  @@map("users")
+}
+
+model Transaction {
+  id          String          @id @default(uuid(7)) @db.Uuid
+  userId      String          @map("user_id") @db.Uuid
+  amount      Decimal         @db.Decimal(12, 2)
+  type        TransactionType
+  category    Category
+  description String?         @db.VarChar(255)
+  date        DateTime        @db.Date
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Every query is scoped to one user, so user_id leads each composite index.
+  @@index([userId, date(sort: Desc)])
+  @@index([userId, type, date])
+  @@map("transactions")
+}
+
+model Budget {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  month     Int      @db.SmallInt
+  year      Int      @db.SmallInt
+  amount    Decimal  @db.Decimal(12, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // One budget per user per month.
+  @@unique([userId, year, month])
+  @@map("budgets")
+}
