@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
+import { loadTestEnv } from './test-env.js';
 
-process.env.NODE_ENV = 'test';
-// Local runs read .env.test; CI provides the same variables directly.
-dotenv.config({ path: '.env.test', quiet: true });
+// Runs in every test worker before any app module is imported.
+loadTestEnv();

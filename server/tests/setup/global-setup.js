@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
-import dotenv from 'dotenv';
 import pg from 'pg';
+import { loadTestEnv } from './test-env.js';
 
 /**
  * Runs once before the whole test suite: drops and recreates the test database schema by
@@ -8,12 +8,8 @@ import pg from 'pg';
  * SQL that production runs, and start from a clean, known state.
  */
 export default async function setup() {
-  dotenv.config({ path: '.env.test', quiet: true });
-
+  loadTestEnv();
   const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error('DATABASE_URL is not set. Copy .env.test.example to .env.test and edit it.');
-  }
 
   // Safety net: never wipe a development or production database by accident.
   const databaseName = decodeURIComponent(new URL(url).pathname.slice(1));

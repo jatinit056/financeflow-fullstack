@@ -1,7 +1,7 @@
 /**
- * First step of `npm run setup`: checks the Node.js version and creates the API's
- * environment files from the examples (with a freshly generated JWT secret).
- * Existing files are never overwritten.
+ * First step of `npm run setup`: checks the Node.js version and creates server/.env from
+ * server/.env.example with a freshly generated JWT secret. An existing file is never
+ * overwritten. (Tests need no env file: their defaults match docker-compose.yml.)
  */
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -30,5 +30,4 @@ createFromExample('server/.env', 'server/.env.example', (text) =>
     randomBytes(48).toString('hex'),
   ),
 );
-createFromExample('server/.env.test', 'server/.env.test.example');
 console.log(`✓ Node.js ${process.version}\n`);

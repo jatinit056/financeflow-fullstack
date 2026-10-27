@@ -403,7 +403,7 @@ Open **http://localhost:5173** and log in with `demo@financeflow.app` / `Demo@12
 install or a free [Neon](https://neon.tech) project), then run the steps by hand:
 
 ```bash
-node scripts/setup-env.mjs   # creates server/.env and server/.env.test
+node scripts/setup-env.mjs   # creates server/.env with a random JWT secret
 npm run install:all
 npm run db:migrate           # create the tables
 npm run db:seed              # demo user: demo@financeflow.app / Demo@12345
@@ -461,7 +461,7 @@ npm run db:studio           # browse the data in Prisma Studio
 ## Testing
 
 ```bash
-cd server && npm test     # 140 API + unit tests against PostgreSQL (database from .env.test)
+cd server && npm test     # 140 API + unit tests against the financeflow_test database
 cd client && npm test     # 10 unit tests for formatting and date logic
 ```
 
