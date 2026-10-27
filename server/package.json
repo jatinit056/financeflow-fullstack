@@ -9,11 +9,11 @@
     "node": ">=22.18.0"
   },
   "scripts": {
-    "dev": "node --watch src/server.js",
+    "dev": "node --watch --watch-preserve-output src/server.js",
     "start": "node src/server.js",
-    "build": "prisma generate && prisma migrate deploy",
-    "postinstall": "prisma generate",
-    "db:generate": "prisma generate",
+    "build": "prisma generate --no-hints && prisma migrate deploy",
+    "postinstall": "prisma generate --no-hints",
+    "db:generate": "prisma generate --no-hints",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "node prisma/seed.js",
