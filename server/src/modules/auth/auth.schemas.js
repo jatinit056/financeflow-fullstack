@@ -8,11 +8,14 @@ const email = z
   .max(255, { error: 'Email is too long' })
   .pipe(z.email({ error: 'Enter a valid email address' }));
 
+// TextEncoder rather than Buffer, so the schema also runs in the browser (GitHub Pages demo).
+const utf8Length = (value) => new TextEncoder().encode(value).length;
+
 // bcrypt only uses the first 72 bytes of a password, so longer ones are rejected outright.
 const newPassword = z
   .string({ error: 'Password is required' })
   .min(8, { error: 'Password must be at least 8 characters' })
-  .refine((value) => Buffer.byteLength(value, 'utf8') <= 72, {
+  .refine((value) => utf8Length(value) <= 72, {
     error: 'Password must be at most 72 bytes',
   })
   .refine((value) => /[A-Za-z]/.test(value), { error: 'Password must contain a letter' })

@@ -58,8 +58,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+      # The GitHub Pages demo reuses the API's validation schemas (server/src), which need zod.
+      - run: npm ci --ignore-scripts
+        working-directory: server
       - run: npm ci
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - run: npm run build:pages

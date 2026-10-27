@@ -12,6 +12,8 @@ import { useToast } from '../toast/useToast.js';
 import { AuthLayout } from './auth/AuthLayout.jsx';
 
 const DEMO_ENABLED = import.meta.env.VITE_DEMO_ENABLED !== 'false';
+// GitHub Pages build: the API runs inside the browser (see src/demo/demoBackend.js).
+const STATIC_DEMO = import.meta.env.MODE === 'pages';
 
 export default function LoginPage() {
   useDocumentTitle('Log in');
@@ -134,7 +136,15 @@ export default function LoginPage() {
         </div>
       )}
 
-      {slow && (
+      {STATIC_DEMO && (
+        <p className="mt-4 text-sm text-ink-2">
+          This live demo runs entirely in your browser, so anything you add stays on this device.
+          You can also log in as <span className="font-medium text-ink">demo@financeflow.app</span>{' '}
+          / <span className="font-medium text-ink">Demo@12345</span>.
+        </p>
+      )}
+
+      {slow && !STATIC_DEMO && (
         <p role="status" className="mt-4 text-sm text-ink-2">
           Waking up the server. On free hosting the first request can take up to a minute.
         </p>

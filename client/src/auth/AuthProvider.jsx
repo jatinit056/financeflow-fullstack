@@ -14,6 +14,7 @@ import { AuthContext } from './AuthContext.js';
  *   "authenticated"  user is known
  *   "anonymous"      no valid session
  *   "offline"        the API could not be reached while checking — offer a retry
+ *   "signing-out"    logout in progress: leaving the app before the user is cleared
  */
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
@@ -76,12 +77,23 @@ export function AuthProvider({ children }) {
   const logout = useCallback(
     ({ redirectTo = '/login', message = 'You have been logged out.' } = {}) => {
       tokenStorage.clear();
-      setState({ status: 'anonymous', user: null });
+      // The user is only forgotten once the login/register page is on screen (PublicOnlyRoute
+      // calls finishSignOut). Clearing it here would re-render the current protected page
+      // first — React Router commits navigations as transitions — and ProtectedRoute would
+      // redirect on its own to /login, overriding redirectTo (e.g. the demo's "Create your
+      // own account" → /register).
+      setState((current) => ({ ...current, status: 'signing-out' }));
       navigate(redirectTo, { replace: true });
       if (message) toast.success(message);
     },
     [navigate, toast],
   );
+
+  const finishSignOut = useCallback(() => {
+    setState((current) =>
+      current.status === 'signing-out' ? { status: 'anonymous', user: null } : current,
+    );
+  }, []);
 
   const retryCheck = useCallback(() => {
     setState({ status: 'checking', user: null });
@@ -89,8 +101,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ ...state, login, register, startDemo, logout, retryCheck }),
-    [state, login, register, startDemo, logout, retryCheck],
+    () => ({ ...state, login, register, startDemo, logout, finishSignOut, retryCheck }),
+    [state, login, register, startDemo, logout, finishSignOut, retryCheck],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;

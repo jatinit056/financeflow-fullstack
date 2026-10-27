@@ -1,0 +1,56 @@
+name: Deploy demo to GitHub Pages
+
+# Publishes the static demo (client built with `--mode pages`, API running in the browser).
+# One-time setup: repository Settings → Pages → Source: "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+      - id: pages
+        uses: actions/configure-pages@v6
+      # The demo reuses the API's validation schemas from server/src, which need zod.
+      # Scripts are skipped: the Prisma client isn't part of the demo.
+      - run: npm ci --ignore-scripts
+        working-directory: server
+      - run: npm ci
+        working-directory: client
+      - run: npm run build:pages
+        working-directory: client
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: client/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -41,6 +41,13 @@ export const api = axios.create({
   timeout: 75_000,
 });
 
+// Static GitHub Pages build (`npm run build:pages`): there is no server, so API calls are
+// answered in the browser by src/demo/demoBackend.js. Normal builds don't include that code.
+if (import.meta.env.MODE === 'pages') {
+  api.defaults.adapter = (config) =>
+    import('../demo/demoBackend.js').then(({ handleRequest }) => handleRequest(config));
+}
+
 // Attach the token to every request.
 api.interceptors.request.use((config) => {
   const token = tokenStorage.get();

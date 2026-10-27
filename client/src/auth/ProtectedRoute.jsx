@@ -9,7 +9,8 @@ export function ProtectedRoute() {
 
   if (status === 'checking' || status === 'offline') return <FullPageStatus />;
 
-  if (status !== 'authenticated') {
+  // While signing out, logout() itself navigates away (to /login or /register).
+  if (status !== 'authenticated' && status !== 'signing-out') {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 

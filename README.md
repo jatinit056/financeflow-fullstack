@@ -11,11 +11,11 @@
 
 ![FinanceFlow dashboard](docs/screenshots/dashboard.png)
 
-|              |                                                                 |
-| ------------ | --------------------------------------------------------------- |
-| **Live app** | `YOUR-VERCEL-URL` (one-click demo account on the login page)    |
-| **API**      | `YOUR-RENDER-URL/api/health`                                    |
-| **Source**   | `https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack` |
+|                |                                                                                                            |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Live demo**  | **https://YOUR-GITHUB-USERNAME.github.io/financeflow-fullstack/** (click **Explore the demo**, no sign-up) |
+| **Source**     | https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack                                              |
+| **Full stack** | Express + PostgreSQL API, deployable to Render + Neon + Vercel ([guide](#production-deployment))           |
 
 ---
 
@@ -50,7 +50,7 @@ money? Am I saving more than last month?_
 
 It is a complete product, not a tutorial: a REST API with authentication, validation and per-user
 authorization; a PostgreSQL schema with constraints and indexes; a responsive React dashboard with
-charts; 150 automated tests; CI; and one-command deployment configs for Vercel, Render and Neon.
+charts; 157 automated tests; CI; and one-command deployment configs for Vercel, Render and Neon.
 
 ## Features
 
@@ -169,11 +169,12 @@ financeflow/
 │   │   │   ├── transactions/       Form, list, filters, delete dialog
 │   │   │   └── budget/             Budget runway meter, budget form
 │   │   ├── pages/                  Dashboard, Transactions, Budget, Analytics, Login, Register, 404
+│   │   ├── demo/                   In-browser API for the GitHub Pages demo (not in normal builds)
 │   │   ├── router.jsx              Route tree (lazy-loaded pages)
 │   │   └── main.jsx
-│   ├── tests/                      Unit tests (formatting, dates)
+│   ├── tests/                      Unit tests (formatting, dates, demo API)
 │   ├── vercel.json                 SPA rewrites + security headers
-│   └── vite.config.js              Dev proxy /api -> localhost:5000
+│   └── vite.config.js              Dev proxy /api -> localhost:5000; GitHub Pages build mode
 │
 ├── server/                         Express API (Render)
 │   ├── prisma/
@@ -193,6 +194,7 @@ financeflow/
 │
 ├── docs/                           Screenshots, Postman collection
 ├── .github/workflows/ci.yml        Lint + test + build on every push
+├── .github/workflows/pages.yml     Deploys the live demo to GitHub Pages
 ├── docker-compose.yml              Local PostgreSQL (dev + test databases)
 ├── render.yaml                     Render Blueprint for the API
 └── package.json                    Root scripts: dev, test, lint, format
@@ -479,7 +481,7 @@ npm run db:studio           # browse the data in Prisma Studio
 
 ```bash
 cd server && npm test     # 140 API + unit tests against the financeflow_test database
-cd client && npm test     # 10 unit tests for formatting and date logic
+cd client && npm test     # 17 tests: formatting, dates and the in-browser demo API
 ```
 
 API tests run against a **real PostgreSQL database**, not mocks: before the run, the schema is rebuilt
@@ -577,11 +579,20 @@ environment variables.
 
 ## Live demo
 
-- **App:** `YOUR-VERCEL-URL`
-- **API health check:** `YOUR-RENDER-URL/api/health`
+**[Open the live demo](https://YOUR-GITHUB-USERNAME.github.io/financeflow-fullstack/)** (hosted on
+GitHub Pages). Click **Explore the demo** for a private sandbox with six months of sample data, or log
+in as `demo@financeflow.app` / `Demo@12345`.
 
-No sign-up needed: click **Explore the demo** on the login page to get a private sandbox account with
-six months of sample data. Each demo account is isolated and deleted automatically after 24 hours.
+**How a static site runs a full-stack app.** GitHub Pages only serves static files, so the Pages build
+(`npm run build:pages` in `client/`) swaps Axios's HTTP adapter for an in-browser implementation of the
+same REST API: [`client/src/demo/demoBackend.js`](client/src/demo/demoBackend.js). It reuses the
+server's own Zod schemas, sample-data generator, budget rules and CSV export, so endpoints, status codes,
+validation messages and JSON shapes match the real API; only the SQL queries are replaced by array
+operations, and data stays in the visitor's browser (localStorage). The normal build contains none of
+this code. [`pages.yml`](.github/workflows/pages.yml) redeploys the demo on every push to `main`.
+
+To run the real Express + PostgreSQL backend in production, follow
+[Production deployment](#production-deployment) (Render + Neon + Vercel).
 
 ## GitHub repository
 
