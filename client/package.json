@@ -5,7 +5,7 @@
   "description": "FinanceFlow web app — React 19, Vite, Tailwind CSS, React Router, Recharts",
   "type": "module",
   "engines": {
-    "node": ">=22.22.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "dev": "vite",

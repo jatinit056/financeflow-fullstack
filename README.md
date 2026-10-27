@@ -378,7 +378,7 @@ Generate a secret with `node -e "console.log(require('crypto').randomBytes(48).t
 
 ## Local setup
 
-**Prerequisites:** Node.js **22.22+** (or 24 LTS), Git, and a PostgreSQL database. For the database
+**Prerequisites:** Node.js **22.18+** (24 LTS recommended), Git, and a PostgreSQL database. For the database
 pick one: Docker Desktop (easiest), a local PostgreSQL install, or a free [Neon](https://neon.tech)
 project (no installation).
 

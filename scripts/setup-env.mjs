@@ -6,10 +6,12 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
+// 22.18 is the first Node.js release that runs TypeScript files (the generated Prisma client)
+// without flags. 24 LTS is recommended.
 const [major, minor] = process.versions.node.split('.').map(Number);
-if (major < 22 || (major === 22 && minor < 22)) {
+if (major < 22 || (major === 22 && minor < 18)) {
   console.error(
-    `\nFinanceFlow needs Node.js 22.22 or newer, but this computer has ${process.version}.\n` +
+    `\nFinanceFlow needs Node.js 22.18 or newer, but this computer has ${process.version}.\n` +
       'Install the LTS version from https://nodejs.org, reopen the terminal and run "npm run setup" again.\n',
   );
   process.exit(1);

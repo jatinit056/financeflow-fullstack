@@ -5,7 +5,7 @@
   "description": "FinanceFlow — personal finance & expense management dashboard (React + Express + PostgreSQL)",
   "license": "MIT",
   "engines": {
-    "node": ">=22.22.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "setup": "node scripts/setup-env.mjs && npm run install:all && npm run db:up && npm run db:migrate && npm run db:seed",
