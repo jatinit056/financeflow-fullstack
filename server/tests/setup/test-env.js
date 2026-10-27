@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
  * are already set (for example in CI) always win.
  */
 const DEFAULTS = {
-  DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/financeflow_test',
+  DATABASE_URL: 'postgresql://postgres:postgres@localhost:5433/financeflow_test',
   JWT_SECRET: 'test-secret-that-is-at-least-32-characters-long',
   JWT_EXPIRES_IN: '1h',
   CLIENT_URL: 'http://localhost:5173',

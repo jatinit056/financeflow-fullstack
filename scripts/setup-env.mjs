@@ -19,11 +19,32 @@ if (major < 22 || (major === 22 && minor < 18)) {
 
 function createFromExample(target, example, transform = (text) => text) {
   if (existsSync(target)) {
-    console.log(`✓ ${target} already exists (left unchanged)`);
+    console.log(`✓ ${target} already exists`);
     return;
   }
   writeFileSync(target, transform(readFileSync(example, 'utf8')));
   console.log(`✓ Created ${target}`);
+}
+
+/** The host port docker-compose.yml publishes PostgreSQL on (e.g. "5433:5432" -> "5433"). */
+function composeDatabasePort() {
+  const match = /['"]?(\d+):5432['"]?/.exec(readFileSync('docker-compose.yml', 'utf8'));
+  return match ? match[1] : null;
+}
+
+/** If DATABASE_URL points at the Docker database, make sure it uses the port Docker publishes. */
+function syncDockerPort(file) {
+  const port = composeDatabasePort();
+  if (!port || !existsSync(file)) return;
+  const text = readFileSync(file, 'utf8');
+  const updated = text.replace(
+    /(DATABASE_URL="postgresql:\/\/postgres:postgres@localhost:)(\d+)(\/financeflow")/,
+    (line, start, current, end) => (current === port ? line : `${start}${port}${end}`),
+  );
+  if (updated !== text) {
+    writeFileSync(file, updated);
+    console.log(`✓ ${file}: database port set to ${port} (matches docker-compose.yml)`);
+  }
 }
 
 createFromExample('server/.env', 'server/.env.example', (text) =>
@@ -32,4 +53,5 @@ createFromExample('server/.env', 'server/.env.example', (text) =>
     randomBytes(48).toString('hex'),
   ),
 );
+syncDockerPort('server/.env');
 console.log(`✓ Node.js ${process.version}\n`);

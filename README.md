@@ -352,7 +352,7 @@ Content-Type: application/json
 
 | Variable             | Required  | Example                                                     | Purpose                                                                                                                          |
 | -------------------- | :-------: | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`       |     ✓     | `postgresql://postgres:postgres@localhost:5432/financeflow` | App's database connection (Neon: the **pooled** URL)                                                                             |
+| `DATABASE_URL`       |     ✓     | `postgresql://postgres:postgres@localhost:5433/financeflow` | App's database connection (Neon: the **pooled** URL)                                                                             |
 | `DIRECT_URL`         |           | Neon direct URL                                             | Used only by Prisma migrations (Neon: the URL **without** `-pooler`)                                                             |
 | `JWT_SECRET`         |     ✓     | 64+ random characters                                       | Signs tokens. At least 32 characters or the server refuses to start                                                              |
 | `JWT_EXPIRES_IN`     |           | `7d`                                                        | Token lifetime                                                                                                                   |
@@ -389,7 +389,8 @@ cd financeflow-fullstack
 
 # 2. Start Docker Desktop, then run the one-time setup. It checks your Node.js version,
 #    creates server/.env (with a random JWT secret), installs all dependencies, starts
-#    PostgreSQL in Docker, creates the tables and loads demo data.
+#    PostgreSQL in Docker (on port 5433, so it never clashes with another local PostgreSQL),
+#    creates the tables and loads demo data.
 npm run setup
 
 # 3. Run the API and the web app together
