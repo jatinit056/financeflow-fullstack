@@ -8,6 +8,7 @@
     "node": ">=22.22.0"
   },
   "scripts": {
+    "setup": "node scripts/setup-env.mjs && npm run install:all && npm run db:up && npm run db:migrate && npm run db:seed",
     "install:all": "npm install && npm --prefix server install && npm --prefix client install",
     "dev": "concurrently --names api,web --prefix-colors green,cyan \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
     "build": "npm --prefix client run build",
@@ -15,8 +16,10 @@
     "lint": "npm --prefix server run lint && npm --prefix client run lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down"
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:migrate": "npm --prefix server run db:deploy",
+    "db:seed": "npm --prefix server run db:seed"
   },
   "devDependencies": {
     "concurrently": "^10.0.6",

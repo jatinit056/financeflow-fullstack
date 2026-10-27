@@ -383,30 +383,32 @@ pick one: Docker Desktop (easiest), a local PostgreSQL install, or a free [Neon]
 project (no installation).
 
 ```bash
-# 1. Get the code and install everything (root, server and client)
+# 1. Get the code
 git clone https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack.git
 cd financeflow-fullstack
-npm run install:all
 
-# 2. Start PostgreSQL with Docker (creates "financeflow" and "financeflow_test")
-docker compose up -d
+# 2. Start Docker Desktop, then run the one-time setup. It checks your Node.js version,
+#    creates server/.env (with a random JWT secret), installs all dependencies, starts
+#    PostgreSQL in Docker, creates the tables and loads demo data.
+npm run setup
 
-# 3. Configure the API
-cp server/.env.example server/.env              # Windows: copy server\.env.example server\.env
-cp server/.env.test.example server/.env.test    # Windows: copy server\.env.test.example server\.env.test
-#    then open server/.env and set JWT_SECRET (and DATABASE_URL if you don't use Docker)
-
-# 4. Create the tables and load demo data
-cd server
-npx prisma migrate deploy
-npm run db:seed          # prints a demo login: demo@financeflow.app / Demo@12345
-cd ..
-
-# 5. Run API and web app together
+# 3. Run the API and the web app together
 npm run dev
 ```
 
-Open **http://localhost:5173**. The API runs on **http://localhost:5000** (`/api/health` should return `ok`).
+Open **http://localhost:5173** and log in with `demo@financeflow.app` / `Demo@12345` (or click
+**Explore the demo**). The API runs on **http://localhost:5000** (`/api/health` should return `ok`).
+
+**Not using Docker?** Point `DATABASE_URL` in `server/.env` at any PostgreSQL database (a local
+install or a free [Neon](https://neon.tech) project), then run the steps by hand:
+
+```bash
+node scripts/setup-env.mjs   # creates server/.env and server/.env.test
+npm run install:all
+npm run db:migrate           # create the tables
+npm run db:seed              # demo user: demo@financeflow.app / Demo@12345
+npm run dev
+```
 
 **One-click setup in VS Code**
 
@@ -414,8 +416,8 @@ The repo ships VS Code tasks, so you can do everything from menus. Open the fold
 **Terminal → Run Task…** and pick:
 
 1. **FinanceFlow: First-time setup** — installs dependencies, starts PostgreSQL in Docker (Docker
-   Desktop must be running), creates the tables and loads the demo data. Create `server/.env` first
-   (step 3 above).
+   Desktop must be running), creates the tables and loads the demo data. Run
+   `node scripts/setup-env.mjs` once first if `server/.env` doesn't exist yet.
 2. **FinanceFlow: Start app (API + web)** — runs both servers.
 3. **FinanceFlow: Open in browser** — opens http://localhost:5173.
 
