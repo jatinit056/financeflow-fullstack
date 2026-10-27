@@ -406,6 +406,7 @@ install or a free [Neon](https://neon.tech) project), then run the steps by hand
 ```bash
 node scripts/setup-env.mjs   # creates server/.env with a random JWT secret
 npm run install:all
+npm run db:generate          # generate the Prisma client
 npm run db:migrate           # create the tables
 npm run db:seed              # demo user: demo@financeflow.app / Demo@12345
 npm run dev
@@ -443,6 +444,18 @@ cd client && npm run dev
 | `npm run build`             | Production build of the web app         |
 | `npm run db:up` / `db:down` | Start / stop the Docker database        |
 
+**Troubleshooting**
+
+- **`Cannot find module …/src/generated/prisma/client.ts`**: the Prisma client hasn't been
+  generated yet. Run `npm run db:generate` (setup does this for you).
+- **`Bind for 0.0.0.0:5433 failed: port is already allocated`**: something else uses port 5433.
+  Change the left-hand port in `docker-compose.yml` (for example `'5434:5432'`) and run
+  `npm run setup` again; it updates `server/.env` to match.
+- **Port 5173 is busy**: Vite moves to the next free port (5174…) and prints the address. Login
+  still works because API calls go through Vite's proxy.
+- **Windows asks to allow Node.js through the firewall** when the API starts: either answer is
+  fine for local use; the app only talks to `localhost`.
+
 ## Database migrations
 
 Schema changes are versioned SQL files in `server/prisma/migrations`, committed to Git and applied in
@@ -457,7 +470,7 @@ npm run db:studio           # browse the data in Prisma Studio
 ```
 
 `npm install` runs `prisma generate` automatically, which creates the typed Prisma client in
-`server/src/generated` (ignored by Git).
+`server/src/generated` (ignored by Git). `npm run db:generate` re-creates it at any time.
 
 ## Testing
 
