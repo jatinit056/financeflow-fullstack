@@ -453,6 +453,9 @@ cd client && npm run dev
   `npm run setup` again; it updates `server/.env` to match.
 - **Port 5173 is busy**: Vite moves to the next free port (5174…) and prints the address. Login
   still works because API calls go through Vite's proxy.
+- **`[web] memory allocation of … bytes failed`**: the computer ran out of free memory while Vite
+  was bundling dependencies on its first start. Close a few apps or browser tabs and run
+  `npm run dev` again (later starts reuse the cached bundle and need much less memory).
 - **Windows asks to allow Node.js through the firewall** when the API starts: either answer is
   fine for local use; the app only talks to `localhost`.
 
