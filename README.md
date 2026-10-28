@@ -2,7 +2,7 @@
 
 **A personal finance and expense dashboard: log income and spending, set a monthly budget, and see where every rupee goes.**
 
-[![CI](https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack/actions/workflows/ci.yml)
+[![CI](https://github.com/jatinit056/financeflow-fullstack/actions/workflows/ci.yml/badge.svg)](https://github.com/jatinit056/financeflow-fullstack/actions/workflows/ci.yml)
 ![React](https://img.shields.io/badge/React-19-149eca)
 ![Node.js](https://img.shields.io/badge/Node.js-22-5fa04e)
 ![Express](https://img.shields.io/badge/Express-5-333)
@@ -11,11 +11,11 @@
 
 ![FinanceFlow dashboard](docs/screenshots/dashboard.png)
 
-|                |                                                                                                            |
-| -------------- | ---------------------------------------------------------------------------------------------------------- |
-| **Live demo**  | **https://YOUR-GITHUB-USERNAME.github.io/financeflow-fullstack/** (click **Explore the demo**, no sign-up) |
-| **Source**     | https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack                                              |
-| **Full stack** | Express + PostgreSQL API, deployable to Render + Neon + Vercel ([guide](#production-deployment))           |
+|                |                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| **Live demo**  | **https://jatinit056.github.io/financeflow-fullstack/** (click **Explore the demo**, no sign-up) |
+| **Source**     | https://github.com/jatinit056/financeflow-fullstack                                              |
+| **Full stack** | Express + PostgreSQL API, deployable to Render + Neon + Vercel ([guide](#production-deployment)) |
 
 ---
 
@@ -386,7 +386,7 @@ project (no installation).
 
 ```bash
 # 1. Get the code
-git clone https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack.git
+git clone https://github.com/jatinit056/financeflow-fullstack.git
 cd financeflow-fullstack
 
 # 2. Start Docker Desktop, then run the one-time setup. It checks your Node.js version,
@@ -579,7 +579,7 @@ environment variables.
 
 ## Live demo
 
-**[Open the live demo](https://YOUR-GITHUB-USERNAME.github.io/financeflow-fullstack/)** (hosted on
+**[Open the live demo](https://jatinit056.github.io/financeflow-fullstack/)** (hosted on
 GitHub Pages). Click **Explore the demo** for a private sandbox with six months of sample data, or log
 in as `demo@financeflow.app` / `Demo@12345`.
 
@@ -596,7 +596,7 @@ To run the real Express + PostgreSQL backend in production, follow
 
 ## GitHub repository
 
-`https://github.com/YOUR-GITHUB-USERNAME/financeflow-fullstack`
+`https://github.com/jatinit056/financeflow-fullstack`
 
 ## Security
 
